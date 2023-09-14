@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>React Samples</title>
+</head>
+
+<body>
+    <!-- Target container -->
+    <div id="root">
+        <div id="title">
+            <h1>Hello React</h1>
+        </div>
+
+    </div>
+    <div id="test">
+
+    </div>
+    <div id="forjsx">
+    </div>
+    <div id="app">
+
+    </div>
+    <!-- React library & ReactDOM (Development Version)-->
+    <script src="https://unpkg.com/react@16/umd/react.development.js"> </script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"> </script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script>
+        // Pure React and JavaScript code
+        const myEle = React.createElement("h1", { id: "id_1" }, "baked salmon");
+        const second = React.createElement("h1", { id: "id_2", name: "hello_id" }, "hello this");
+        myul = React.createElement(
+            "ul",
+            null,
+            React.createElement("li", null, "2 lb salmon"), React.createElement("li", null, "5 sprigs fresh rosemary"), React.createElement("li", null, "2 tablespoons olive oil"), React.createElement("li", null, "2 small lemons"), React.createElement("li", null, "1 teaspoon kosher salt"), React.createElement("li", null, "4 cloves of chopped garlic")
+        );
+        ReactDOM.render([myEle, second, myul], document.getElementById("root"));
+
+        const items = [
+            "2 lb salmon",
+            "5 sprigs fresh rosemary", "2 tablespoons olive oil", "2 small lemons",
+            "1 teaspoon kosher salt",
+            "4 cloves of chopped garlic"
+        ];
+        function IngredientsList(items) {
+            return React.createElement(
+                "ol",
+                { className: "ingredients" },
+                items.map((item, index) => React.createElement("li", { key: index }, item))
+            )
+        }
+        const myIngre = IngredientsList(items);
+        ReactDOM.render(myIngre, document.getElementById("test"));
+    </script>
+    <!--the jsx code needed to convert-->
+    <script type="text/babel">
+        const data = [{
+            name: "Baked Salmon",
+            ingredients: [
+                { name: "Salmon", amount: 1, measurement: "l lb" },
+                { name: "Pine Nuts", amount: 1, measurement: "cup" },
+                { name: "Butter Lettuce", amount: 2, measurement: "cups" },
+                { name: "Yellow Squash", amount: 1, measurement: "med" },
+                { name: "Olive Oil", amount: 0.5, measurement: "cup" },
+                { name: "Garlic", amount: 3, measurement: "cloves" }
+            ], steps: [
+                "Preheat the oven to 350 degrees.",
+                "Spread the olive oil around a glass baking dish.",
+                "Add the yellow squash and place in the oven for 30 mins.",
+                "Add the salmon, garlic, and pine nuts to the dish.",
+                "Bake for 15 minutes.",
+                "Remove from oven. Add the lettuce and serve."
+            ]
+        },
+        {
+            name: "Fish Tacos",
+            ingredients: [
+                { name: "Whitefish", amount: 1, measurement: "l lb" },
+                { name: "Cheese", amount: 1, measurement: "cup" },
+                { name: "Iceberg Lettuce", amount: 2, measurement: "cups" },
+                { name: "Tomatoes", amount: 2, measurement: "large" },
+                { name: "Tortillas", amount: 3, measurement: "med" }
+            ], steps: [
+                "Cook the fish on the grill until cooked through.",
+                "Place the fish on the 3 tortillas.",
+                "Top them with lettuce, tomatoes, and cheese."
+            ]
+        }
+        ];
+
+        function Recipe({ name, ingredients, step }) {
+            return (
+                <section id={name.toLowerCase().replace(/ /g, "-")}>
+                    <h1>{name}</h1>
+                    <ul className="ingredients">
+                        {ingredients?.map((singleIngredient, index) =>
+                        (
+                            <li key={index}> {singleIngredient.name}</li>
+                        )
+                        )}
+                    </ul>
+                    <section className="instructions">
+                        <h2>cooking instructions</h2>
+                        {
+                            step?.map((step, index) => (
+                                <p key={index}>{step}</p>
+                            ))
+                        }
+                    </section>
+                </section>
+            )
+
+        }
+        //the paramter can be improved by changing to
+        //Menu({title,recipes})
+        //and use it as {title}, {recipes}
+        function Menu(props) {
+            return (
+                <article>
+                    <header>
+                        <h1>{props.title}</h1>
+                    </header>
+                    <div className="recipes">
+                        {
+                            props.recipes.map(
+                                (item, index) => (
+                                    //return a list of Recipe 
+                                    //the recipes came from props
+                                    <Recipe
+                                        key={index}
+                                        name={item.name}
+                                        ingredients={item.ingredients}
+                                        step={item.steps}
+                                    />
+                                    /*
+                                    props.recipes.map(
+                                    (item,index)=>(
+                                        <Recipe
+                                        key={index} 
+                                        {...item}
+                                        all the property in item will be passed to Recipe
+                                    />
+                                    */
+
+
+                                ))
+                        }
+                    </div>
+                </article>
+
+
+            );
+        }
+
+        ReactDOM.render(
+            //the Menu function is called and the 
+            //there is parameter props are 
+            //prop.recipes and prop.title 
+            //corresponding to the below two prop of the Menu elements
+            //but this is not html elements
+            //the Menu element will return a article 
+            // contains <header> <div> 
+            <Menu recipes={data} title="Delicious" />,
+            document.getElementById("forjsx")
+
+        );
+        import React from "react";
+        import ReactDOM from "react";
+        import useState from "react";
+        function App() {
+            const [colors, setColors] = useState(colorData); return (
+                <ColorList
+                    colors={colors}
+                    onRateColor={(id, rating) => {
+                        const newColors = colors.map(color =>
+                            color.id === id ? { ...color, rating } : color
+                        );
+                        setColors(newColors);
+                    }}
+                    onRemoveColor={id => {
+                        const newColors = colors.filter(color => color.id !== id); setColors(newColors);
+                    }}
+                />
+            );
+        }
+
+
+
+
+        function ColorList({ colors = [],
+            onRemoveColor = f => f,
+            onRateColor = f => f
+        }) {
+            if (!colors.length) return
+            <div>No Colors Listed. (Add a Color)</div>;
+            return
+            (
+                <div className="color-list">
+                    {
+                        colors.map(color =>
+                        (
+                            <Color
+                                key={color.id}
+                                {...color}
+                                onRemove={onRemoveColor}
+                                onRate={onRateColor}
+                            />
+                        ))
+                    }
+
+                </div>
+            );
+        }
+        function Color({ id,
+            title,
+            color,
+            rating,
+            onRemove = f => f,
+            onRate = f => f
+        }) {
+            return (
+                <section>
+                    <h1>{title}</h1>
+                    <button onClick={() => onRemove(id)}>
+                        <FaTrash />
+                    </button>
+                    <div style={{ height: 50, backgroundColor: color }} />
+                    <StarRating
+                        selectedStars={rating}
+                        onRate={rating => onRate(id, rating)}
+                    />
+                </section>
+            );
+        }
+        function StarRating({ totalStars = 5,
+            selectedStars = 0,
+            onRate = f => f
+        }) {
+            return (<>
+                {createArray(totalStars).map((n, i) => (
+                    <Star
+                        key={i}
+                        selected={selectedStars > i}
+                        onSelect={() => onRate(i + 1)}
+                    />
+                ))}
+            </>);
+        }
+        ReactDOM.render(<App/>,document.getElementById("app"));
+
+    </script>
+</body>
+
+</html>
